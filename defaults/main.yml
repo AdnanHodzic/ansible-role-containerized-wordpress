@@ -3,7 +3,7 @@
 system_user: ubuntu
 compose_project_dir: /home/{{ system_user }}/compose-wordpress
 domain: foolcontrol.org
-wp_version: 4.7.1
+wp_version: 4.7.5
 mysql_root_psw: change-M3
 wp_db_name: wordpress
 wp_db_tb_pre: wp_
