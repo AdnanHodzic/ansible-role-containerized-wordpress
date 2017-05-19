@@ -1,0 +1,77 @@
+---
+# setup compose dir structure
+- name: setup compose dir structure
+  file:
+    path: "{{ compose_project_dir }}/{{ item }}"
+    state: directory
+    owner: "{{ system_user }}"
+    group: "{{ system_user }}"
+    recurse: yes
+    mode: 0755
+  with_items:
+  - wordpress
+  - wp-db-data
+  - nginx
+  - logs/nginx
+  tags:
+    - dir_ops
+
+- name: create docker-compose.yml file
+  file:
+    path: "{{ compose_project_dir }}/docker-compose.yml"
+    owner: "{{ system_user }}"
+    group: "{{ system_user }}"
+    state: touch
+  tags:
+    - file_ops
+
+- name: deploy Docker Compose project for (Wordpress/MariaDB/Nginx containers)
+  template:
+    src: docker-compose.j2
+    dest: "{{ compose_project_dir }}/docker-compose.yml"
+    owner: "{{ system_user }}"
+    group: "{{ system_user }}"
+    mode: 0644
+  tags:
+    - deploy_compose
+
+- name: deploy WordPress Nginx virtual host
+  template:
+    src: wordpress-nginx.j2
+    dest: "{{ compose_project_dir }}/nginx/wordpress.conf"
+    owner: "{{ system_user }}"
+    group: "{{ system_user }}"
+    mode: 0644
+  tags:
+    - gen_nginx
+
+- name: Run docker-compose up
+  command: docker-compose -f docker-compose.yml up -d
+  args:
+    chdir: "{{ compose_project_dir }}"
+  tags:
+    - compose_run
+
+- name: giving some time for project (all 3 containers) to start-up
+  pause:
+    seconds: 10
+
+# debug output
+#- debug:
+#    msg:
+#      - "blog domain: {{ domain }}"
+#      - "mysql password: {{ mysql_root_psw }}"
+#      - "mysql db name: {{ wp_db_name }}"
+#      - "mysql db tablse prefix: {{ wp_db_tb_pre }}"
+#      - "wp db host: {{ wp_db_host }}"
+#      - "wp db pass: {{ wp_db_psw }}"
+#      - "wp image version:{{ wp_version }}-php7.0-fpm"
+
+- debug:
+    msg:
+      - "Setup successfully complete."
+      - ""
+      - "Wordpress instance is available on following IP: {{ inventory_hostname }}"
+      - "If DNS is pointing to this IP, it'll be available on: {{ domain }}"
+  tags:
+    - result
