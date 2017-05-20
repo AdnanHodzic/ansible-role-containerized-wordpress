@@ -1,6 +1,6 @@
 galaxy_info:
   author: Adnan Hodzic
-  description: Deploys Docker Compose project for WordPress blog (3 separate containers running WordPress PHP7 FPM, Nxing and MariaDB)
+  description: Deploys Docker Compose project for WordPress instance (3 separate containers running WordPress PHP7 FPM, Nginx and MariaDB)
 
   license: license (GPLv3)
 
