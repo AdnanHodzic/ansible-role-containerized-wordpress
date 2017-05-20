@@ -59,15 +59,15 @@
 # debug output
 - debug:
     msg:
-      - "Variables used in configuration are:"
+      - "With specified variables, following configuration has been made:"
       - ""
-      - "blog domain: {{ domain }}"
-      - "wp image version:{{ wp_version }}-php7.0-fpm"
-      - "mysql password: {{ mysql_root_psw }}"
-      - "mysql db name: {{ wp_db_name }}"
-      - "mysql db tablse prefix: {{ wp_db_tb_pre }}"
-      - "wp db host: {{ wp_db_host }}"
-      - "wp db pass: {{ wp_db_psw }}"
+      - "URL used for Nginx virtual host: {{ domain }}"
+      - "WordPress Docker image version:{{ wp_version }}-php7.0-fpm"
+      - "WORDPRESS_DB_NAME: {{ wp_db_name }}"
+      - "WORDPRESS_TABLE_PREFIX: {{ wp_db_tb_pre }}"
+      - "WORDPRESS_DB_HOST: {{ wp_db_host }}"
+      - "WORDPRESS_DB_PASSWORD: {{ wp_db_psw }}"
+      - "MYSQL_ROOT_PASSWORD: {{ wp_db_psw }}"
 
 - debug:
     msg:
