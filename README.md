@@ -1,7 +1,10 @@
 Ansible Role: Containerized WordPress
 =========
 
-This Ansible playbook will Deploy & run Docker Compose project for WordPress instance (3 separate containers running WordPress PHP7 FPM, Nginx and MariaDB)
+This Ansible playbook will Deploy & run Docker Compose project for WordPress instance. Which consists of 3 separate containers running:
+* WordPress (PHP7 FPM)
+* Nginx
+* MariaDB
 
 Requirements
 ------------
