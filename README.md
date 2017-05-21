@@ -6,6 +6,8 @@ This Ansible playbook will Deploy & run Docker Compose project for WordPress ins
 * Nginx
 * MariaDB
 
+This role was created as part of [containerized-wordpress-project](https://github.com/AdnanHodzic/containerized-wordpress-project)
+
 Requirements
 ------------
 
