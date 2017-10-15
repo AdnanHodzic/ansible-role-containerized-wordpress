@@ -26,7 +26,7 @@ wordpress:
       - '9000:9000'
     volumes:
       - ./wordpress:/var/www/html
-      - ./files/uploads.ini:/usr/local/etc/php/conf.d
+      - ./wordpress/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     environment:
       - WORDPRESS_DB_NAME={{ wp_db_name }}
       - WORDPRESS_TABLE_PREFIX={{ wp_db_tb_pre }}
