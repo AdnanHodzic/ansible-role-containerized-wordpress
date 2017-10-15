@@ -28,7 +28,7 @@
 - name: deploy uploads.ini to WordPress "{{ compose_project_dir }}" dir
   copy:
     src: "{{ role_path }}/files/uploads.ini"
-    dest: "{{ compose_project_dir }}/wordpress"
+    dest: "{{ compose_project_dir }}/wordpress/"
     owner: "{{ system_user }}"
     group: "{{ system_user }}"
     mode: 0644
