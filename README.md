@@ -1,38 +1,57 @@
-Role Name
+Ansible Role: Containerized WordPress
 =========
 
-A brief description of the role goes here.
+This Ansible playbook will Deploy & run Docker Compose project for WordPress instance. Which consists of 3 separate containers running:
+* WordPress (PHP7 FPM)
+* Nginx
+* MariaDB
+
+This role was created as part of [containerized-wordpress-project](https://github.com/AdnanHodzic/containerized-wordpress-project)
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+For this role to work, it is required to have have Docker and Docker Compose installed and setup. If you haven't done this already (manually), then you're required to install following role: [AdnanHodzic.docker-compose-setup](https://galaxy.ansible.com/AdnanHodzic/docker-compose-setup/).
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+This role comes with following variables defined in defaults/main.yml:
+
+```
+system_user: ubuntu
+compose_project_dir: /home/{{ system_user }}/compose-wordpress
+domain: foolcontrol.org
+wp_version: 4.7.5
+wp_db_name: wordpress
+wp_db_tb_pre: wp_
+wp_db_host: mysql
+wp_db_psw: change-M3
+```
+
+If role is run without changing these, WordPress instance with Nginx virtual host as well as Database settings will be setup with these values. 
+
+**ToDo:** 
+Add full link to where these are explained on http://foolcontrol.org/?p=2002 post
+
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+**ToDo:**
+Determine if "AdnanHodzic.docker-compose-setup" role should be set as role dependency. If yes, update this section of ReadMe + meta code.
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```
+- hosts: servers
+  remote_user: "{{ system_user }}"
+  roles:
+    - { role: AdnanHodzic.containerized-wordpress }}  
+```
 
 License
 -------
 
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+GPLv3
