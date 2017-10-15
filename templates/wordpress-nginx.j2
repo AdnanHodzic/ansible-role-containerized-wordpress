@@ -5,6 +5,8 @@ server {
     root /var/www/html;
     index index.php;
 
+    client_max_body_size 100m;
+
     access_log /var/log/nginx/{{ domain | replace(".", "-") }}-access.log;
     error_log /var/log/nginx/{{ domain | replace(".", "-") }}-error.log;
 
