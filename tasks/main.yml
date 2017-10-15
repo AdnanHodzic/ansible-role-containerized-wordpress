@@ -25,6 +25,14 @@
   tags:
     - file_ops
 
+- name: deploy uploads.ini to WordPress "{{ compose_project_dir }}" dir
+  copy:
+    src: "{{ role_path }}/files/uploads.ini"
+    dest: "{{ compose_project_dir }}/wordpress"
+    owner: "{{ system_user }}"
+    group: "{{ system_user }}"
+    mode: 0644
+
 - name: deploy Docker Compose project for (Wordpress/MariaDB/Nginx containers)
   template:
     src: docker-compose.j2
