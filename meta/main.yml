@@ -30,6 +30,3 @@ galaxy_info:
     - ec2
     - aws
     - automation
-
-dependencies:
-  - name: AdnanHodzic.docker-compose-setup
