@@ -43,6 +43,14 @@
   tags:
     - deploy_compose
 
+- name: deploy gzip.conf as Nginx virtual host
+  copy:
+    src: "{{ role_path }}/files/gzip.conf"
+    dest: "{{ compose_project_dir }}/nginx/gzip.conf"
+    owner: "{{ system_user }}"
+    group: "{{ system_user }}"
+    mode: 0644
+
 - name: deploy WordPress Nginx virtual host
   template:
     src: wordpress-nginx.j2
