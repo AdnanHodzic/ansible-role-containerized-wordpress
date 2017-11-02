@@ -6,6 +6,7 @@ server {
     index index.php;
 
     client_max_body_size 100m;
+    gzip on;
 
     access_log /var/log/nginx/{{ domain | replace(".", "-") }}-access.log;
     error_log /var/log/nginx/{{ domain | replace(".", "-") }}-error.log;
