@@ -22,8 +22,6 @@ mysql:
 
 wordpress:
     image: wordpress:{{ wp_version }}-{{ php_fmp_version }}
-    ports:
-      - '9000:9000'
     volumes:
       - ./wordpress:/var/www/html
       - ./wordpress/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
