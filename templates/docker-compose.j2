@@ -1,37 +1,41 @@
-https-portal:
-  image: steveltn/https-portal
-  # You can build from source code rather than use the prebuilt image from Docker Hub.
-  # build: ../..
-  ports:
-    - 80:80
-    - 443:443
-  links:
-    - wordpress
-  # Restart https-portal on failure or after Docker host restart.
-  restart: always
-  environment:
-    # Forward wordpress.example.com to the WordPress container.
-    # You can set up multiple domains at once.
-    DOMAINS: '{{ domain }} -> http://wordpress'
+version: '2'
 
-    # Using staging server by default, for there is a rate limit on production.
-    # Uncomment to use Let's Encrypt production server.
-    PRODUCTION: 'false'
+services:
 
-wordpress:
-  image: wordpress
-#  image: wordpress:{{ wp_version }}-{{ php_fmp_version }}
-#  environment:
-#    - WORDPRESS_DB_NAME={{ wp_db_name }}
-#    - WORDPRESS_TABLE_PREFIX={{ wp_db_tb_pre }}
-#    - WORDPRESS_DB_HOST={{ wp_db_host }}
-#    - WORDPRESS_DB_PASSWORD={{ wp_db_psw }}
-  links:
-    - db:mysql
+  https-portal:
+    image: steveltn/https-portal
+    # You can build from source code rather than use the prebuilt image from Docker Hub.
+    # build: ../..
+    ports:
+      - 80:80
+      - 443:443
+    links:
+      - wordpress
+    # Restart https-portal on failure or after Docker host restart.
+    restart: always
+    environment:
+      # Forward wordpress.example.com to the WordPress container.
+      # You can set up multiple domains at once.
+      DOMAINS: '{{ domain }} -> http://wordpress'
 
-db:
-  image: mariadb
-  volumes:
-    - ./wp-db-data:/var/lib/mysql
-  environment:
-    - MYSQL_ROOT_PASSWORD={{ wp_db_psw }}
+      # Using staging server by default, for there is a rate limit on production.
+      # Uncomment to use Let's Encrypt production server.
+      PRODUCTION: 'false'
+
+  wordpress:
+    image: wordpress
+  #  image: wordpress:{{ wp_version }}-{{ php_fmp_version }}
+  #  environment:
+  #    - WORDPRESS_DB_NAME={{ wp_db_name }}
+  #    - WORDPRESS_TABLE_PREFIX={{ wp_db_tb_pre }}
+  #    - WORDPRESS_DB_HOST={{ wp_db_host }}
+  #    - WORDPRESS_DB_PASSWORD={{ wp_db_psw }}
+    links:
+      - db:mysql
+
+  db:
+    image: mariadb
+    volumes:
+      - ./wp-db-data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD={{ wp_db_psw }}
