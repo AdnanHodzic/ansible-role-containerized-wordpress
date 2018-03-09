@@ -1,0 +1,12 @@
+server {
+    listen       80;
+    server_name  <%= domain.name %>;
+
+    location / {
+       return    301 https://$server_name$request_uri;
+    }
+
+    # This helper sets up the path for the ACME server to verify that you own the site
+    # Defaults to /.well-known/acme-challenge/
+    <%= acme_challenge_location %>
+}
