@@ -1,6 +1,5 @@
 ---
-# setup compose dir structure
-- name: setup compose dir structure
+- name: Setup compose dir structure
   file:
     path: "{{ compose_project_dir }}/{{ item }}"
     state: directory
@@ -14,19 +13,15 @@
   - nginx
   - nginx-conf
   - logs/nginx
-  tags:
-    - dir_ops
 
-- name: create docker-compose.yml file
+- name: Create docker-compose.yml file
   file:
     path: "{{ compose_project_dir }}/docker-compose.yml"
     owner: "{{ system_user }}"
     group: "{{ system_user }}"
     state: touch
-  tags:
-    - file_ops
 
-- name: deploy uploads.ini to WordPress "{{ compose_project_dir }}" dir
+- name: Deploy uploads.ini to WordPress "{{ compose_project_dir }}" dir
   copy:
     src: "{{ role_path }}/files/uploads.ini"
     dest: "{{ compose_project_dir }}/wordpress/"
@@ -34,17 +29,15 @@
     group: "{{ system_user }}"
     mode: 0644
 
-- name: deploy Docker Compose project for (Wordpress/MariaDB/Nginx containers)
+- name: Deploy Docker Compose project for (Wordpress/MariaDB/Nginx containers)
   template:
     src: docker-compose.j2
     dest: "{{ compose_project_dir }}/docker-compose.yml"
     owner: "{{ system_user }}"
     group: "{{ system_user }}"
     mode: 0644
-  tags:
-    - deploy_compose
 
-- name: deploy gzip.conf as Nginx virtual host
+- name: Deploy gzip.conf as Nginx virtual host
   copy:
     src: "{{ role_path }}/files/gzip.conf"
     dest: "{{ compose_project_dir }}/nginx/gzip.conf"
@@ -52,19 +45,17 @@
     group: "{{ system_user }}"
     mode: 0644
 
-- name: deploy WordPress Nginx virtual host
+- name: Deploy WordPress Nginx virtual host
   template:
     src: wordpress-nginx.j2
     dest: "{{ compose_project_dir }}/nginx/wordpress.conf"
     owner: "{{ system_user }}"
     group: "{{ system_user }}"
     mode: 0644
-  tags:
-    - gen_nginx
 
 - name: Deploy Let's Encrypt Nginx configs (override https-portal default)
   template:
-    src: "{{ item }"
+    src: "{{ item }}"
     dest: "{{ compose_project_dir }}/nginx-conf/{{ item }}"
     owner: "{{ system_user }}"
     group: "{{ system_user }}"
@@ -85,16 +76,14 @@
     dest: "{{ compose_project_dir }}/nginx-conf/{{ domain }}.ssl.conf.erb"
     remote_src: "yes"
 
-- name: Run docker-compose up
-  command: docker-compose -f docker-compose.yml up -d
-  args:
-    chdir: "{{ compose_project_dir }}"
-  tags:
-    - compose_run
-
-- name: giving some time for project (all 3 containers) to start-up
-  pause:
-    seconds: 10
+#- name: Run docker-compose up
+#  command: docker-compose -f docker-compose.yml up -d
+#  args:
+#    chdir: "{{ compose_project_dir }}"
+#
+#- name: Giving some time for project (all 3 containers) to start-up
+#  pause:
+#    seconds: 10
 
 # debug output
 - debug:
@@ -115,5 +104,3 @@
       - ""
       - "Wordpress instance is available on following IP: {{ inventory_hostname }}"
       - "If DNS is pointing to this IP, it'll be available on: {{ domain }}"
-  tags:
-    - result
