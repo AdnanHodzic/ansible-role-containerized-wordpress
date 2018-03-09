@@ -12,6 +12,7 @@
   - wordpress
   - wp-db-data
   - nginx
+  - nginx-conf
   - logs/nginx
   tags:
     - dir_ops
@@ -60,6 +61,29 @@
     mode: 0644
   tags:
     - gen_nginx
+
+- name: Deploy Let's Encrypt Nginx configs (override https-portal default)
+  template:
+    src: "{{ item }"
+    dest: "{{ compose_project_dir }}/nginx-conf/{{ item }}"
+    owner: "{{ system_user }}"
+    group: "{{ system_user }}"
+    mode: 0644
+  with_items:
+  - domain.conf.j2
+  - domain.conf.ssl.j2
+
+- name: Adjust Let's Encrypt Nginx HTTP conf naming scheme
+  copy:
+    src: "{{ compose_project_dir }}/nginx-conf/domain.conf.j2"
+    dest: "{{ compose_project_dir }}/nginx-conf/{{ domain }}.conf.erb"
+    remote_src: "yes"
+
+- name: Adjust Let's Encrypt Nginx HTTPS conf naming scheme
+  copy:
+    src: "{{ compose_project_dir }}/nginx-conf/domain.conf.ssl.j2"
+    dest: "{{ compose_project_dir }}/nginx-conf/{{ domain }}.ssl.conf.erb"
+    remote_src: "yes"
 
 - name: Run docker-compose up
   command: docker-compose -f docker-compose.yml up -d
