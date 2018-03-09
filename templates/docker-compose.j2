@@ -17,7 +17,7 @@ services:
       CLIENT_MAX_BODY_SIZE: '64M'
       GZIP: 'on'
       DOMAINS: '{{ domain }}'
-      PRODUCTION: 'false'
+      PRODUCTION: '{{ stage }}'
     links:
       - wordpress
     restart: always
