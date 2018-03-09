@@ -84,14 +84,26 @@
   - domain.conf.j2
   - domain.conf.ssl.j2
 
-#- name: Run docker-compose up
-#  command: docker-compose -f docker-compose.yml up -d
-#  args:
-#    chdir: "{{ compose_project_dir }}"
-#
-#- name: Giving some time for project (all 3 containers) to start-up
-#  pause:
-#    seconds: 10
+- name: Run docker-compose up
+  command: docker-compose -f docker-compose.yml up -d
+  args:
+    chdir: "{{ compose_project_dir }}"
+
+- name: Waiting for all containers to start up and {{ domain }} to be accessible
+  wait_for:
+    host: "{{ domain }}"
+    port: 80
+    timeout: 180
+  register: host_accessible
+  failed_when: False
+
+- debug:
+    msg: "Site is reachable"
+  when: host_accessible.state is defined and host_accessible.state == "started"
+
+- debug:
+    msg: "Site is NOT reachable"
+  when: host_accessible.state is defined and host_accessible.state == "stopped"
 
 # debug output
 - debug:
