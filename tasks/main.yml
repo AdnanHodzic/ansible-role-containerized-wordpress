@@ -76,6 +76,14 @@
     dest: "{{ compose_project_dir }}/nginx-conf/{{ domain }}.ssl.conf.erb"
     remote_src: "yes"
 
+- name: Clean-up abundant Let's Encrypt Nginx config templates
+  file:
+    path: "{{ compose_project_dir }}/nginx-conf/{{ item }}"
+    state: absent
+  with_items:
+  - domain.conf.j2
+  - domain.conf.ssl.j2
+
 #- name: Run docker-compose up
 #  command: docker-compose -f docker-compose.yml up -d
 #  args:
