@@ -14,7 +14,7 @@ services:
       - '80:80'
       - '443:443'
     environment:
-      CLIENT_MAX_BODY_SIZE: '64M'
+      CLIENT_MAX_BODY_SIZE: '100M'
       GZIP: 'on'
       DOMAINS: '{{ domain }}'
       PRODUCTION: '{{ stage }}'
