@@ -34,10 +34,10 @@ services:
       - ./wordpress:/var/www/html
       - ./wordpress/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     environment:
-      WORDPRESS_DB_HOST: db:3306'
+      WORDPRESS_DB_HOST: 'db:3306'
       WORDPRESS_DB_NAME: '{{ wp_db_name }}'
       # ToDo: templatize user
-      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_NAME: 'wordpress'
       WORDPRESS_DB_PASSWORD: '{{ wp_db_psw }}'
     restart: always
     networks:
@@ -51,7 +51,7 @@ services:
       MYSQL_ROOT_PASSWORD: '{{ wp_db_psw }}'
       MYSQL_DATABASE: '{{ wp_db_name }}'
       # ToDo: templatize user
-      MYSQL_USER: wordpress
+      MYSQL_USER: 'wordpress'
       MYSQL_PASSWORD: '{{ wp_db_psw }}'
     restart: always
     networks:
