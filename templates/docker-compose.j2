@@ -3,7 +3,7 @@ version: '3'
 services:
 
   https-portal:
-    image: steveltn/https-portal
+    image: steveltn/https-portal:1.7.3
     volumes:
       - ./wordpress:/var/www/html
       - ./nginx:/var/www/vhosts
@@ -17,7 +17,8 @@ services:
       CLIENT_MAX_BODY_SIZE: '100M'
       GZIP: 'on'
       DOMAINS: '{{ domain }}'
-      PRODUCTION: '{{ stage }}'
+      STAGE: '{{ stage }}'
+      # FORCE_RENEW: 'true'
     links:
       - wordpress
     restart: always
