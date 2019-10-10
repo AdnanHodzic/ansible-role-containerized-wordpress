@@ -1,55 +1,57 @@
-version: '3'
+version: '3.6'
 
 services:
 
   https-portal:
-    image: steveltn/https-portal:1.7.3
+    image: steveltn/https-portal
+    container_name: https
     volumes:
       - ./wordpress:/var/www/html
-      - ./nginx:/var/www/vhosts
       - ./logs/nginx:/var/log/nginx
-      - ./nginx-conf/{{ domain }}.conf.erb:/var/lib/nginx-conf/{{ domain }}.conf.erb:ro
-      - ./nginx-conf/{{ domain }}.ssl.conf.erb:/var/lib/nginx-conf/{{ domain }}.ssl.conf.erb:ro
     ports:
       - '80:80'
       - '443:443'
     environment:
       CLIENT_MAX_BODY_SIZE: '100M'
       GZIP: 'on'
-      DOMAINS: '{{ domain }}'
+      DOMAINS: 'test.foolcontrol.org -> http://wordpress:80'
       STAGE: '{{ stage }}'
-      # FORCE_RENEW: 'true'
     links:
       - wordpress
-    restart: always
+    restart: unless-stopped
     networks:
       - wp
 
   wordpress:
-    depends_on:
-      - db
-    image: wordpress:{{ wp_version }}-{{ php_fmp_version }}
-    ports:
-      - '9000:9000'
+    links:
+      - db:mysql
+    # ToDo: implement option of using different version
+    image: wordpress:{{ wp_version }}
+    container_name: wp
     volumes:
       - ./wordpress:/var/www/html
       - ./wordpress/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     environment:
-      WORDPRESS_DB_HOST: 'db:3306'
-      WORDPRESS_DB_NAME: '{{ wp_db_name }}'
       # ToDo: templatize user
-      WORDPRESS_DB_NAME: 'wordpress'
+      WORDPRESS_DB_USER: 'wordpress'
+      # ToDo: templatize db name
+      WORDPRESS_DB_NAME: '{{ wp_db_name }}'
       WORDPRESS_DB_PASSWORD: '{{ wp_db_psw }}'
-    restart: always
+      WORDPRESS_DB_HOST: 'db'
+      MYSQL_PORT_3306_TCP: '3306'
+    restart: unless-stopped
     networks:
       - wp
 
   db:
     image: mysql:5.7
+    container_name: db
     volumes:
       - ./wp-db-data:/var/lib/mysql
     environment:
+      # ToDo: give option for different root and db password?
       MYSQL_ROOT_PASSWORD: '{{ wp_db_psw }}'
+      # ToDo: templatize db name
       MYSQL_DATABASE: '{{ wp_db_name }}'
       # ToDo: templatize user
       MYSQL_USER: 'wordpress'
@@ -60,3 +62,4 @@ services:
 
 networks:
   wp:
+    driver: bridge
