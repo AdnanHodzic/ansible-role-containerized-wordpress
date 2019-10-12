@@ -10,8 +10,6 @@
   with_items:
   - wordpress
   - wp-db-data
-  - nginx
-  - nginx-conf
   - logs/nginx
 
 - name: Create docker-compose.yml file
@@ -29,7 +27,7 @@
     group: "{{ system_user }}"
     mode: 0644
 
-- name: Deploy Docker Compose project for (Wordpress/MariaDB/Nginx containers)
+- name: Deploy Docker Compose project for (Wordpress/MySQL/Nginx (Let's Encrypt) containers)
   template:
     src: docker-compose.j2
     dest: "{{ compose_project_dir }}/docker-compose.yml"
@@ -37,73 +35,26 @@
     group: "{{ system_user }}"
     mode: 0644
 
-- name: Deploy gzip.conf as Nginx virtual host
-  copy:
-    src: "{{ role_path }}/files/gzip.conf"
-    dest: "{{ compose_project_dir }}/nginx/gzip.conf"
-    owner: "{{ system_user }}"
-    group: "{{ system_user }}"
-    mode: 0644
+- name: Run docker-compose up
+  command: docker-compose -f docker-compose.yml up -d
+  args:
+    chdir: "{{ compose_project_dir }}"
 
-- name: Deploy WordPress Nginx virtual host
-  template:
-    src: wordpress-nginx.j2
-    dest: "{{ compose_project_dir }}/nginx/wordpress.conf"
-    owner: "{{ system_user }}"
-    group: "{{ system_user }}"
-    mode: 0644
+- name: Waiting for all containers to start up and {{ domain }} to be accessible
+  wait_for:
+    host: "{{ domain }}"
+    port: 80
+    timeout: 180
+  register: host_accessible
+  failed_when: False
 
-- name: Deploy Let's Encrypt Nginx configs (override https-portal default)
-  template:
-    src: "{{ item }}"
-    dest: "{{ compose_project_dir }}/nginx-conf/{{ item }}"
-    owner: "{{ system_user }}"
-    group: "{{ system_user }}"
-    mode: 0644
-  with_items:
-  - domain.conf.j2
-  - domain.conf.ssl.j2
+- debug:
+    msg: "Site is reachable"
+  when: host_accessible.state is defined and host_accessible.state == "started"
 
-- name: Adjust Let's Encrypt Nginx HTTP conf naming scheme
-  copy:
-    src: "{{ compose_project_dir }}/nginx-conf/domain.conf.j2"
-    dest: "{{ compose_project_dir }}/nginx-conf/{{ domain }}.conf.erb"
-    remote_src: "yes"
-
-- name: Adjust Let's Encrypt Nginx HTTPS conf naming scheme
-  copy:
-    src: "{{ compose_project_dir }}/nginx-conf/domain.conf.ssl.j2"
-    dest: "{{ compose_project_dir }}/nginx-conf/{{ domain }}.ssl.conf.erb"
-    remote_src: "yes"
-
-- name: Clean-up abundant Let's Encrypt Nginx config templates
-  file:
-    path: "{{ compose_project_dir }}/nginx-conf/{{ item }}"
-    state: absent
-  with_items:
-  - domain.conf.j2
-  - domain.conf.ssl.j2
-
-#- name: Run docker-compose up
-#  command: docker-compose -f docker-compose.yml up -d
-#  args:
-#    chdir: "{{ compose_project_dir }}"
-#
-#- name: Waiting for all containers to start up and {{ domain }} to be accessible
-#  wait_for:
-#    host: "{{ domain }}"
-#    port: 80
-#    timeout: 180
-#  register: host_accessible
-#  failed_when: False
-#
-#- debug:
-#    msg: "Site is reachable"
-#  when: host_accessible.state is defined and host_accessible.state == "started"
-#
-#- debug:
-#    msg: "Site is NOT reachable"
-#  when: host_accessible.state is defined and host_accessible.state == "stopped"
+- debug:
+    msg: "Site is NOT reachable"
+  when: host_accessible.state is defined and host_accessible.state == "stopped"
 
 # debug output
 - debug:
@@ -112,7 +63,7 @@
       - ""
       - "URL used for Nginx virtual host: {{ domain }}"
       - "Specified URL is live/DNS is setup: {{ stage }}"
-      - "WordPress Docker image version:{{ wp_version }}-{{ php_fmp_version }}"
+      - "WordPress Docker image version:{{ wp_version }}"
       - "WORDPRESS_DB_NAME: {{ wp_db_name }}"
       - "WORDPRESS_TABLE_PREFIX: {{ wp_db_tb_pre }}"
       - "WORDPRESS_DB_HOST: {{ wp_db_host }}"

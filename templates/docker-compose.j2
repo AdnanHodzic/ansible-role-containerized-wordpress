@@ -35,6 +35,7 @@ services:
       WORDPRESS_DB_USER: 'wordpress'
       # ToDo: templatize db name
       WORDPRESS_DB_NAME: '{{ wp_db_name }}'
+      # ToDo: templatize db password
       WORDPRESS_DB_PASSWORD: '{{ wp_db_psw }}'
       WORDPRESS_DB_HOST: 'db'
       MYSQL_PORT_3306_TCP: '3306'
