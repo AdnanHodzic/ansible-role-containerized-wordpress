@@ -2,7 +2,7 @@ Ansible Role: Containerized WordPress
 =========
 
 This Ansible playbook will Deploy & run Docker Compose project for WordPress instance. It will also configure Let's Encrypt certificates for specified domain. It consists of 3 separate containers running:
-* WordPress (PHP7 FPM)
+* WordPress
 * Nginx (enabled with Let's Encrpt HTTPS encryption)
 * MariaDB
 
@@ -22,9 +22,8 @@ This role comes with following variables defined in defaults/main.yml:
 system_user: ubuntu
 compose_project_dir: /home/{{ system_user }}/compose-wordpress
 domain: foolcontrol.org
-stage: false
-wp_version: 4.9.4
-php_fmp_version: php7.1-fpm
+stage: staging
+wp_version: latest
 wp_db_name: wordpress
 wp_db_tb_pre: wp_
 wp_db_host: mysql
