@@ -31,11 +31,8 @@ services:
       - ./wordpress:/var/www/html
       - ./wordpress/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     environment:
-      # ToDo: templatize user
-      WORDPRESS_DB_USER: 'wordpress'
-      # ToDo: templatize db name
+      WORDPRESS_DB_USER: '{{ wp_db_user }}'
       WORDPRESS_DB_NAME: '{{ wp_db_name }}'
-      # ToDo: templatize db password
       WORDPRESS_DB_PASSWORD: '{{ wp_db_psw }}'
       WORDPRESS_DB_HOST: 'db'
       MYSQL_PORT_3306_TCP: '3306'
@@ -49,12 +46,9 @@ services:
     volumes:
       - ./wp-db-data:/var/lib/mysql
     environment:
-      # ToDo: give option for different root and db password?
-      MYSQL_ROOT_PASSWORD: '{{ wp_db_psw }}'
-      # ToDo: templatize db name
+      MYSQL_ROOT_PASSWORD: '{{ db_root_psw }}'
       MYSQL_DATABASE: '{{ wp_db_name }}'
-      # ToDo: templatize user
-      MYSQL_USER: 'wordpress'
+      MYSQL_USER: '{{ wp_db_user }}'
       MYSQL_PASSWORD: '{{ wp_db_psw }}'
     restart: unless-stopped
     networks:
