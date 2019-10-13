@@ -23,7 +23,7 @@ system_user: ubuntu
 compose_project_dir: /home/{{ system_user }}/compose-wordpress
 domain: foolcontrol.org
 stage: staging
-wp_version: latest
+wp_version: 5.2.3
 wp_db_name: wordpress
 wp_db_tb_pre: wp_
 wp_db_host: mysql

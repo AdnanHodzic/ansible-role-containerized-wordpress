@@ -25,7 +25,7 @@ services:
     links:
       - db:mysql
     # ToDo: implement option of using different version
-    image: wordpress:{{ wp_version }}
+    image: wordpress:{{ wp_version }}-apache
     container_name: wp
     volumes:
       - ./wordpress:/var/www/html
