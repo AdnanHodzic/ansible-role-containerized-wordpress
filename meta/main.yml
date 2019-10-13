@@ -1,6 +1,6 @@
 galaxy_info:
   author: Adnan Hodzic
-  description: Deploy & run Docker Compose project for WordPress instance (3 separate containers running WordPress, Nginx and MariaDB) with Let's Encrypt HTTPS encryption
+  description: Deploy & run Docker Compose project for WordPress instance (3 separate containers running WordPress, Nginx and MySQL) with Let's Encrypt HTTPS encryption
 
   license: license (GPLv3)
 
@@ -10,6 +10,10 @@ galaxy_info:
   - name: Ubuntu
     versions:
     - all
+  platforms:
+  - name: Debian
+    versions:
+    - all
 
   galaxy_tags:
     - development
@@ -17,6 +21,7 @@ galaxy_info:
     - docker
     - compose
     - ubuntu
+    - debian
     - wordpress
     - nginx
     - mariadb
