@@ -13,7 +13,7 @@ services:
     environment:
       CLIENT_MAX_BODY_SIZE: '100M'
       GZIP: 'on'
-      DOMAINS: 'test.foolcontrol.org -> http://wordpress:80'
+      DOMAINS: '{{ domain }} -> http://wordpress:80'
       STAGE: '{{ stage }}'
     links:
       - wordpress
