@@ -13,6 +13,12 @@ galaxy_info:
   - name: Debian
     versions:
     - all
+  - name: CentOS
+    versions:
+    - all
+  - name: RedHat
+    versions: 
+    - all 
 
   galaxy_tags:
     - development
@@ -21,6 +27,9 @@ galaxy_info:
     - compose
     - ubuntu
     - debian
+    - centos
+    - redhat
+    - rhel
     - wordpress
     - nginx
     - mariadb
