@@ -23,8 +23,8 @@
   copy:
     src: "{{ role_path }}/files/uploads.ini"
     dest: "{{ compose_project_dir }}/wordpress/"
-    owner: "{{ system_user }}"
-    group: "{{ system_user }}"
+    owner: "www-data"
+    group: "www-data"
     mode: 0644
 
 - name: Deploy Docker Compose project for Wordpress/MySQL/Nginx (Let's Encrypt) containers

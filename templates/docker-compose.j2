@@ -15,15 +15,14 @@ services:
       GZIP: 'on'
       DOMAINS: '{{ domain }} -> http://wordpress:80'
       STAGE: '{{ stage }}'
-    links:
-      - wordpress
     restart: unless-stopped
     networks:
       - wp
 
   wordpress:
-    links:
-      - db:mysql
+    depends_on:
+      db:
+        condition: service_healthy
     # ToDo: implement option of using different version
     image: wordpress:{{ wp_version }}-apache
     container_name: wp
@@ -45,6 +44,11 @@ services:
     container_name: db
     volumes:
       - ./wp-db-data:/var/lib/mysql
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password='{{ wp_db_psw }}' --execute \"SHOW DATABASES;\""
+      interval: 2s
+      timeout: 20s
+      retries: 10
     environment:
       MYSQL_ROOT_PASSWORD: '{{ db_root_psw }}'
       MYSQL_DATABASE: '{{ wp_db_name }}'
