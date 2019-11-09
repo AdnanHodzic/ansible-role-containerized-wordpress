@@ -27,16 +27,6 @@
     group: "www-data"
     mode: 0644
 
-- name: Allow WordPress upgrade without using FTP client
-  lineinfile:
-    dest: "{{ compose_project_dir }}/wordpress/wp-config.php"
-    line: "define('FS_METHOD','direct');"
-    insertafter: "EOF"
-    regexp: "define('FS_METHOD','direct');"
-    owner: "www-data"
-    group: "www-data"
-    state: present
-
 - name: Deploy Docker Compose project for Wordpress/MySQL/Nginx (Let's Encrypt) containers
   template:
     src: docker-compose.j2
